@@ -1,4 +1,4 @@
-package com.example.lv4;
+package com.example.lv5;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ public class MainMenu {
         return mainmenu;
     }
 
-    public void setMenuItems (List < MenuItem > menuItems) {
+    public void setMenuItems (List <MenuItem> menuItems) {
         this.mainmenu = menuItems;
     }
 }
