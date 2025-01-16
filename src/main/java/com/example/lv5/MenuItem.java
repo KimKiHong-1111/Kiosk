@@ -4,10 +4,8 @@ public class MenuItem {
     private String name;
     private double price;
     private String explain;
-
     public MenuItem() {
     }
-
     public MenuItem(String name) {
         this.name = name;
     }
@@ -16,7 +14,6 @@ public class MenuItem {
         this.price = price;
         this.explain = explain;
     }
-
     public String getName() {
         return name;
     }
@@ -40,5 +37,4 @@ public class MenuItem {
     public void setExplain(String explain) {
         this.explain = explain;
     }
-
 }
