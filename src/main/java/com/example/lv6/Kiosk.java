@@ -14,8 +14,12 @@ public class Kiosk {
 
     public void start() {
         if (cart.menuItemList.isEmpty()) {
+            //장바구니에 물건이 없는 경우
             while (true) {
+
                 displayMainMenu();
+                //Main 메뉴판이 나오게 함
+
                 String input = sc.next();
                 int mainChoice;
                 try {
@@ -23,7 +27,7 @@ public class Kiosk {
                 } catch (MenuException e) {
                     System.out.println(e.getMessage());
                     continue;
-                }
+                }//스위치문을 활용해서 수행
                 switch (mainChoice) {
                     case 1:
                         displayBurgerMenu();
@@ -55,17 +59,20 @@ public class Kiosk {
                     if (answer.equals("1")) {
                         cart.menuItemList.add(selectedItem);
                         System.out.println(selectedItem.getName() + "이 장바구니에 추가되었습니다.");
+                        //장바구니 클래스에 있는 리스트에 저장.
                     }
                 } catch (MenuException e) {
                     System.out.println(e.getMessage());
                 }
             }
         } else {
+            //장바구니에 물건이 있는 경우
             while (true) {
-                System.out.println("아래 메뉴판을 보시고 메늏를 골라 입력해주세요.");
+                System.out.println("아래 메뉴판을 보시고 메뉴를 골라 입력해주세요.");
                 displayMainMenu();
+                //메인메뉴
                 displayOrderMenu();
-
+                //오더메뉴 4,5번
                 String input = sc.next();
                 int mainChoice;
                 try {
@@ -94,16 +101,19 @@ public class Kiosk {
                         String order = sc.next();
                         if (order.equals("1")) {
                             System.out.println("주문이 완료되었습니다. 금액은  W " + cart.getMenuItemList().get(0).getPrice() + " 입니다.");
-                        } else {
-                            throw new MenuException();
-                        }
+                        } else if (order.equals("2")){
+                            //어떻게하면 다시 메뉴판으로 돌아가게 할까??
+                            break;
+                        }else throw new MenuException();
+                    case 5:
+                        cart.menuItemList.remove(0);
+                        //주문취소
                     case 0:
                         System.out.println("프로그램을 종료합니다.");
                         return;
                     default:
                         System.out.println("잘못된 입력입니다. 다시 확인해주세요.");
                 }
-
 
                 String b = sc.next();
                 int choice;
