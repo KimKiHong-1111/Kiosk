@@ -16,41 +16,33 @@ public class Kiosk {
         if (cart.menuItemList.isEmpty()) {
             //장바구니에 물건이 없는 경우
             while (true) {
-
-                displayMainMenu();
-                //Main 메뉴판이 나오게 함
-
-                String input = sc.next();
-                int mainChoice;
                 try {
+                    displayMainMenu();
+                    //Main 메뉴판이 나오게 함
+
+                    String input = sc.next();
+                    int mainChoice;
                     mainChoice = Integer.parseInt(input);
-                } catch (MenuException e) {
-                    System.out.println(e.getMessage());
-                    continue;
-                }//스위치문을 활용해서 수행
-                switch (mainChoice) {
-                    case 1:
-                        displayBurgerMenu();
-                        break;
-                    case 2:
-                        System.out.println("죄송합니다. Drinks 메뉴는 아직 미구현입니다.");
-                        break;
-                    case 3:
-                        System.out.println("죄송합니다. Desserts 메뉴는 아직 미구현입니다.");
-                        break;
-                    case 0:
-                        System.out.println("프로그램을 종료합니다.");
-                        return;
-                    default:
-                        System.out.println("잘못된 입력입니다. 다시 확인해주세요.");
-                }
-
-
-                String b = sc.next();
-                int choice;
-                try {
+                    switch (mainChoice) {
+                        case 1:
+                            displayBurgerMenu();
+                            break;
+                        case 2:
+                            System.out.println("죄송합니다. Drinks 메뉴는 아직 미구현입니다.");
+                            continue;
+                        case 3:
+                            System.out.println("죄송합니다. Desserts 메뉴는 아직 미구현입니다.");
+                            continue;
+                        case 0:
+                            System.out.println("프로그램을 종료합니다.");
+                            break;
+                        default:
+                            throw new MenuException();
+                    }
+                    String b = sc.next();
+                    int choice;
                     choice = Integer.parseInt(b);
-                    if (choice == 0) return;
+                    if (choice == 0) continue;
                     MenuItem selectedItem = burgerMenu.getMenuItems().get(choice - 1);
                     System.out.println("선택한 메뉴: " + selectedItem.getName() + "| " + "W ." + selectedItem.getPrice() + "| " + selectedItem.getExplain());
                     System.out.println("위 메뉴를 장바구니에 추가하시겠습니까?");
@@ -60,10 +52,11 @@ public class Kiosk {
                         cart.menuItemList.add(selectedItem);
                         System.out.println(selectedItem.getName() + "이 장바구니에 추가되었습니다.");
                         //장바구니 클래스에 있는 리스트에 저장.
-                    }
+                    }else throw new MenuException();
                 } catch (MenuException e) {
                     System.out.println(e.getMessage());
-                }
+                    continue;
+                }//스위치문을 활용해서 수행
             }
         } else {
             //장바구니에 물건이 있는 경우
@@ -77,47 +70,41 @@ public class Kiosk {
                 int mainChoice;
                 try {
                     mainChoice = Integer.parseInt(input);
-                } catch (MenuException e) {
-                    System.out.println(e.getMessage());
-                    continue;
-                }
-                switch (mainChoice) {
-                    case 1:
-                        displayBurgerMenu();
-                        break;
-                    case 2:
-                        System.out.println("죄송합니다. Drinks 메뉴는 아직 미구현입니다.");
-                        break;
-                    case 3:
-                        System.out.println("죄송합니다. Desserts 메뉴는 아직 미구현입니다.");
-                        break;
-                    case 4:
-                        System.out.println("아래와 같이 주문 하시겠습니까?");
-                        System.out.println("[ Orders ]");
-                        System.out.println(cart.menuItemList.get(0).getName() + " | W " + cart.getMenuItemList().get(0).getPrice() + " | " + cart.menuItemList.get(0).getExplain());
-                        System.out.println("[ Total ]");
-                        System.out.println("W " + cart.getMenuItemList().get(0).getPrice());
-                        System.out.println("1. 주문      2. 메뉴판");
-                        String order = sc.next();
-                        if (order.equals("1")) {
-                            System.out.println("주문이 완료되었습니다. 금액은  W " + cart.getMenuItemList().get(0).getPrice() + " 입니다.");
-                        } else if (order.equals("2")){
-                            //어떻게하면 다시 메뉴판으로 돌아가게 할까??
+                    switch (mainChoice) {
+                        case 1:
+                            displayBurgerMenu();
                             break;
-                        }else throw new MenuException();
-                    case 5:
-                        cart.menuItemList.remove(0);
-                        //주문취소
-                    case 0:
-                        System.out.println("프로그램을 종료합니다.");
-                        return;
-                    default:
-                        System.out.println("잘못된 입력입니다. 다시 확인해주세요.");
-                }
-
-                String b = sc.next();
-                int choice;
-                try {
+                        case 2:
+                            System.out.println("죄송합니다. Drinks 메뉴는 아직 미구현입니다.");
+                            break;
+                        case 3:
+                            System.out.println("죄송합니다. Desserts 메뉴는 아직 미구현입니다.");
+                            break;
+                        case 4:
+                            System.out.println("아래와 같이 주문 하시겠습니까?");
+                            System.out.println("[ Orders ]");
+                            System.out.println(cart.menuItemList.get(0).getName() + " | W " + cart.getMenuItemList().get(0).getPrice() + " | " + cart.menuItemList.get(0).getExplain());
+                            System.out.println("[ Total ]");
+                            System.out.println("W " + cart.getMenuItemList().get(0).getPrice());
+                            System.out.println("1. 주문      2. 메뉴판");
+                            String order = sc.next();
+                            if (order.equals("1")) {
+                                System.out.println("주문이 완료되었습니다. 금액은  W " + cart.getMenuItemList().get(0).getPrice() + " 입니다.");
+                            } else if (order.equals("2")){
+                                //어떻게하면 다시 메뉴판으로 돌아가게 할까??
+                                break;
+                            }else throw new MenuException();
+                        case 5:
+                            cart.menuItemList.remove(0);
+                            //주문취소
+                        case 0:
+                            System.out.println("프로그램을 종료합니다.");
+                            return;
+                        default:
+                            throw new MenuException();
+                    }
+                    String b = sc.next();
+                    int choice;
                     choice = Integer.parseInt(b);
                     if (choice == 0) return;
                     MenuItem selectedItem = burgerMenu.getMenuItems().get(choice - 1);
@@ -131,6 +118,7 @@ public class Kiosk {
                     }
                 } catch (MenuException e) {
                     System.out.println(e.getMessage());
+                    continue;
                 }
             }
         }
