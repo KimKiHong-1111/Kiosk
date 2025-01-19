@@ -1,4 +1,4 @@
-package com.example.lv6;
+package com.example.lv7;
 
 public class MenuItem {
     private String name;
@@ -11,7 +11,6 @@ public class MenuItem {
     public MenuItem(String name) {
         this.name = name;
     }
-
     public MenuItem(String name, double price, String explain) {
         this.name = name;
         this.price = price;
@@ -22,17 +21,24 @@ public class MenuItem {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public double getPrice() {
         return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public String getExplain() {
         return explain;
     }
 
-    @Override
-    public String toString() {
-        return name + "| " + "W ." + price + "| " + explain;
+    public void setExplain(String explain) {
+        this.explain = explain;
     }
 
 }
