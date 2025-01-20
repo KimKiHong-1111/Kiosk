@@ -1,157 +1,125 @@
 package com.example.lv7;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 
 public class Kiosk {
+
     private Scanner sc = new Scanner(System.in);
-    private MenuItem menuItem = new MenuItem();
-    private BurgerMenu burgerMenu = new BurgerMenu();
-    private MainMenu mainMenu = new MainMenu();
-    private OrderMenu orderMenu = new OrderMenu();
     private Cart cart = new Cart();
 
+    List<Menu> mainMenu = new ArrayList<>();
+
+    public void add(Menu menu) {
+        mainMenu.add(menu);
+    }
+
+    // 메인 실행 메서드
     public void start() {
         while (true) {
             try {
-                if (cart.menuItemList.isEmpty()) {
-                    //장바구니에 물건이 없는 경우
-                    displayMainMenu();
-                    //Main 메뉴판이 나오게 함
-                    String input = sc.next();
-                    int mainChoice;
-                    mainChoice = Integer.parseInt(input);
-                    switch (mainChoice) {
-                        case 1:
-                            displayBurgerMenu();
-                            break;
-                        case 2:
-                            System.out.println("죄송합니다. Drinks 메뉴는 아직 미구현입니다.");
-                            continue;
-                        case 3:
-                            System.out.println("죄송합니다. Desserts 메뉴는 아직 미구현입니다.");
-                            continue;
-                        case 0:
-                            System.out.println("프로그램을 종료합니다.");
-                            break;
-                        default:
-                            throw new MenuException();
-                    }
-                    String b = sc.next();
-                    int choice;
-                    choice = Integer.parseInt(b);
-                    if (choice == 0) continue;
-                    MenuItem selectedItem = burgerMenu.getMenuItems().get(choice - 1);
-                    System.out.println("선택한 메뉴: " + selectedItem.getName() + "| " + "W ." + selectedItem.getPrice() + "| " + selectedItem.getExplain());
-                    System.out.println("위 메뉴를 장바구니에 추가하시겠습니까?");
-                    System.out.println("1. 확인        2. 취소");
-                    String answer = sc.next();
-                    if (answer.equals("1")) {
-                        cart.menuItemList.add(selectedItem);
-                        System.out.println(selectedItem.getName() + "이 장바구니에 추가되었습니다.");
-                        //장바구니 클래스에 있는 리스트에 저장.
-                    } else if (answer.equals("2")) {
-                        continue;
-                    } else throw new MenuException();
-                } else {
-                    //장바구니에 메뉴가 담겨있을 경우 뜨는 메뉴판
-                    while (true) {
-                        System.out.println("아래 메뉴판을 보시고 메뉴를 골라 입력해주세요.");
-                        displayMainMenu();
-                        //메인메뉴
-                        displayOrderMenu();
-                        //오더메뉴 4,5번
-                        String input = sc.next();
-                        int mainChoice;
-                        try {
-                            mainChoice = Integer.parseInt(input);
-                            switch (mainChoice) {
-                                case 1:
-                                    displayBurgerMenu();
-                                    break;
-                                case 2:
-                                    System.out.println("죄송합니다. Drinks 메뉴는 아직 미구현입니다.");
-                                    continue;
-                                case 3:
-                                    System.out.println("죄송합니다. Desserts 메뉴는 아직 미구현입니다.");
-                                    continue;
-                                case 4:
-                                    System.out.println("아래와 같이 주문 하시겠습니까?");
-                                    System.out.println("[ Orders ]");
-                                    for (int i = 0; i < cart.menuItemList.size(); i++) {
-                                        System.out.println(cart.menuItemList.get(i).getName() + " | W " + cart.getMenuItemList().get(i).getPrice() + " | " + cart.menuItemList.get(i).getExplain());
-                                    }
-                                    //메뉴 여러개 시킬경우 어떻게 구현할지
-                                    System.out.println("[ Total ]");
-                                    System.out.println("W " + cart.getTotalPrice());
-                                    System.out.println("1. 주문      2. 메뉴판");
-                                    String order = sc.next();
-                                    if (order.equals("1")) {
-                                        System.out.println("주문이 완료되었습니다. 금액은  W " + cart.getTotalPrice() + " 입니다.");
-                                        break;
-                                    } else if (order.equals("2")) {
-                                        //어떻게하면 다시 메뉴판으로 돌아가게 할까??
-                                        continue;
-                                    } else throw new MenuException();
-                                case 5:
-                                    cart.clear();
-                                    //주문취소
-                                    continue;
-                                case 0:
-                                    System.out.println("프로그램을 종료합니다.");
-                                    return;
-                                default:
-                                    throw new MenuException();
-                            }
-                            String b = sc.next();
-                            int choice;
-                            choice = Integer.parseInt(b);
-                            if (choice == 0) return;
-                            MenuItem selectedItem = burgerMenu.getMenuItems().get(choice - 1);
-                            System.out.println("선택한 메뉴: " + selectedItem.getName() + "| " + "W ." + selectedItem.getPrice() + "| " + selectedItem.getExplain());
-                            System.out.println("위 메뉴를 장바구니에 추가하시겠습니까?");
-                            System.out.println("1. 확인        2. 취소");
-                            String answer = sc.next();
-                            if (answer.equals("1")) {
-                                cart.menuItemList.add(selectedItem);
-                                System.out.println(selectedItem.getName() + "이 장바구니에 추가되었습니다.");
-                            }
-                        } catch (MenuException e) {
-                            System.out.println(e.getMessage());
-                            continue;
-                        }
-                    }
+                printMainMenu(); // 메인 메뉴 출력
+                int input = getUserInput();
+
+                if (input == 0) { // 종료
+                    System.out.println("프로그램을 종료합니다.");
+                    break;
+                } else if (input == 4 && !cart.menuItemList.isEmpty()) {
+                    cart.showCart();
+
+                    orderCheck();
+                    continue;
+                } else if (input == 5 && !cart.menuItemList.isEmpty()) {
+                    cart.clear();
+                    System.out.println("장바구니가 초기화되었습니다.");
+                    continue;
                 }
+
+                if (input < 1 || input > mainMenu.size()) throw new MenuException();
+
+                List<MenuItem> subMenu = mainMenu.get(input - 1).getMenuItemList();
+                printSubMenu(mainMenu.get(input - 1), subMenu);
+                handleMenuSelection(subMenu);
             } catch (MenuException e) {
                 System.out.println(e.getMessage());
-                continue;
             }
         }
     }
 
-    private void displayMainMenu() {
-        System.out.println("[ MAIN MENU ]");
-        for (int i = 0; i < mainMenu.getMenuItems().size(); i++) {
-            System.out.println((i + 1) + ". " + mainMenu.getMenuItems().get(i).getName());
+
+
+    //최종주문확인
+    private void orderCheck () {
+        int orderCheck = getUserInput();
+        if (orderCheck == 1) {
+            System.out.println("주문이 완료되었습니다. 금액은 W . " + cart.getTotalPrice() + "입니다.");
+        } else if (orderCheck == 2) {
+            return;
+        } else throw new MenuException();
+    }
+
+    // 메뉴 선택 처리
+    private void handleMenuSelection(List<MenuItem> subMenu) {
+        while (true) {
+            int choice = getUserInput();
+            if (choice == 0) break;
+
+            if (choice > 0 && choice <= subMenu.size()) {
+                MenuItem selectedItem = subMenu.get(choice - 1);
+                System.out.println("선택한 메뉴: " + selectedItem.getName() + " | W " + selectedItem.getPrice() + " | " + selectedItem.getExplain());
+                System.out.println("이 메뉴를 장바구니에 추가하시겠습니까?");
+                System.out.println("1. 확인    2. 취소");
+
+                int confirmation = getUserInput();
+                if (confirmation == 1) {
+                    cart.addItem(selectedItem);
+                    System.out.println(selectedItem.getName() + "이(가) 장바구니에 추가되었습니다.");
+                    return;
+                } else {
+                    System.out.println("메뉴 추가를 취소했습니다.");
+                }
+            } else {
+                System.out.println("올바른 번호를 입력해주세요.");
+            }
+        }
+    }
+
+    //메인메뉴출력
+    private void printMainMenu() {
+        System.out.println("[MAIN MENU]");
+        for (int i = 0; i < mainMenu.size(); i++) {
+            System.out.println((i + 1) + ". " + mainMenu.get(i).getMainMenu());
         }
         System.out.println("0. 종료");
-
-    }
-
-    private void displayOrderMenu() {
-        System.out.println("[ ORDER MENU ]");
-        for (int i = 0; i < orderMenu.getMenuItems().size(); i++) {
-            System.out.println((i + 4) + ". " + orderMenu.getMenuItems().get(i).getName());
+        if (!cart.menuItemList.isEmpty()) {
+            System.out.println("4. Orders       | 장바구니를 확인 후 주문합니다.");
+            System.out.println("5. Cancel       | 진행중인 주문을 취소합니다.");
         }
     }
 
-    private void displayBurgerMenu () {
-        System.out.println("[SHAKESHACK MENU]");
-        System.out.println("어떤 메뉴를 선택하시겠습니까?");
-        for (int i = 0; i < burgerMenu.getMenuItems().size(); i++) {
-            System.out.println((i + 1) + ". " + burgerMenu.getMenuItems().get(i).getName() + "| " + "W ." + burgerMenu.getMenuItems().get(i).getPrice() + "| " + burgerMenu.getMenuItems().get(i).getExplain());
+    //서브메뉴출력
+    private void printSubMenu(Menu menu, List<MenuItem> subMenu) {
+    System.out.println("[ " + menu.getMainMenu().toUpperCase() + " MENU ]");
+    for (int i = 0; i < subMenu.size(); i++) {
+        MenuItem item = subMenu.get(i);
+        System.out.println((i + 1) + ". " + item.getName() + " | W " + item.getPrice() + " | " + item.getExplain());
+    }
+    System.out.println("0. 이전 메뉴로 돌아가기");
+}
+
+
+    // 사용자 입력 받기
+    private int getUserInput () {
+        while (true) {
+            try {
+                System.out.print("번호를 입력해주세요: ");
+                return Integer.parseInt(sc.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("숫자를 입력해주세요.");
+            }
         }
-        System.out.println("0. 뒤로가기");
     }
 }
